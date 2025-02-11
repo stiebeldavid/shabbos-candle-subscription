@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
     const data: SubscriptionData = await req.json();
     
     const emailContent = `
-New Subscription:
+New Or L'Door Subscription:
 ----------------
 Product Type: ${data.productType}
 Number of Candles: ${data.candleCount}
@@ -47,10 +47,10 @@ Special Instructions: ${data.instructions || 'None'}
     `;
 
     const emailResponse = await resend.emails.send({
-      from: "Shabbos Light <onboarding@resend.dev>",
+      from: "Or L'Door <onboarding@resend.dev>",
       to: ["stiebeldavid@gmail.com"],
       cc: ["Shalomphotography1@gmail.com"],
-      subject: "New Shabbos Light Subscription",
+      subject: "New Or L'Door Subscription",
       text: emailContent,
     });
 

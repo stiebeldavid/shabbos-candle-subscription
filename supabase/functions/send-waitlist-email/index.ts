@@ -26,36 +26,36 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Email to admin
     const adminEmailContent = `
-New Waitlist Signup:
+New Or L'Door Waitlist Signup:
 -------------------
 Email: ${data.email}
 City: ${data.city}
     `;
 
     await resend.emails.send({
-      from: "Shabbos Light <onboarding@resend.dev>",
+      from: "Or L'Door <onboarding@resend.dev>",
       to: ["stiebeldavid@gmail.com"],
       cc: ["Shalomphotography1@gmail.com"],
-      subject: "New Shabbos Light Waitlist Signup",
+      subject: "New Or L'Door Waitlist Signup",
       text: adminEmailContent,
     });
 
     // Confirmation email to user
     const userEmailContent = `
-Thank you for joining the Shabbos Light waitlist!
+Thank you for joining the Or L'Door waitlist!
 
-We're excited about your interest in our service. We'll notify you as soon as we expand to ${data.city}.
+We're excited about your interest in our Shabbos candle delivery service. We'll notify you as soon as we expand to ${data.city}.
 
 In the meantime, please feel free to share our service with friends and family in the Detroit Metro area.
 
 Best regards,
-The Shabbos Light Team
+The Or L'Door Team
     `;
 
     await resend.emails.send({
-      from: "Shabbos Light <onboarding@resend.dev>",
+      from: "Or L'Door <onboarding@resend.dev>",
       to: [data.email],
-      subject: "Welcome to Shabbos Light Waitlist",
+      subject: "Welcome to Or L'Door Waitlist",
       text: userEmailContent,
     });
 

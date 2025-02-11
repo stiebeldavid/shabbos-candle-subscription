@@ -65,11 +65,9 @@ const Index = () => {
             alt="Shabbos Candles"
             className="w-full h-[200px] object-cover rounded-lg mb-4"
           />
-          <h2 className="text-xl font-semibold mb-2">Welcome to Shabbos Light</h2>
+          <h2 className="text-xl font-semibold mb-2">Welcome to Or L'Door</h2>
           <p className="text-gray-600 text-sm">
-            Join our monthly subscription service to ensure you never miss the
-            beautiful mitzvah of lighting Shabbos candles. We deliver directly to
-            your door in the Detroit Metro area.
+            Never miss the beautiful mitzvah of lighting Shabbos candles. Subscribe to our monthly Shabbos candle delivery service and have your candles delivered directly to your door in the Detroit Metro area.
           </p>
         </motion.div>
 
