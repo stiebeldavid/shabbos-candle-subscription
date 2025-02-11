@@ -1,8 +1,12 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -46,15 +50,39 @@ Apartment/Suite: ${data.apartment || 'Not provided'}
 Special Instructions: ${data.instructions || 'None'}
     `;
 
+    const toAddress = "stiebeldavid@gmail.com";
+    const ccAddress = "Shalomphotography1@gmail.com";
+
+    console.log("Attempting to send email with CC:", {
+      to: toAddress,
+      cc: ccAddress,
+      subject: "New Or L'Door Subscription"
+    });
+
     const emailResponse = await resend.emails.send({
       from: "Or L'Door <onboarding@resend.dev>",
-      to: ["stiebeldavid@gmail.com"],
-      cc: ["Shalomphotography1@gmail.com"],
+      to: [toAddress],
+      cc: [ccAddress],
       subject: "New Or L'Door Subscription",
       text: emailContent,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Email response:", emailResponse);
+
+    // Log the email attempt
+    const { error: logError } = await supabase
+      .from('email_logs')
+      .insert([{
+        to_addresses: [toAddress],
+        cc_addresses: [ccAddress],
+        subject: "New Or L'Door Subscription",
+        success: true,
+        error_message: null
+      }]);
+
+    if (logError) {
+      console.error("Error logging email:", logError);
+    }
 
     return new Response(JSON.stringify(emailResponse), {
       status: 200,
@@ -65,6 +93,22 @@ Special Instructions: ${data.instructions || 'None'}
     });
   } catch (error: any) {
     console.error("Error sending subscription email:", error);
+
+    // Log the failed attempt
+    const { error: logError } = await supabase
+      .from('email_logs')
+      .insert([{
+        to_addresses: ["stiebeldavid@gmail.com"],
+        cc_addresses: ["Shalomphotography1@gmail.com"],
+        subject: "New Or L'Door Subscription",
+        success: false,
+        error_message: error.message
+      }]);
+
+    if (logError) {
+      console.error("Error logging email failure:", logError);
+    }
+
     return new Response(
       JSON.stringify({ error: error.message }),
       {

@@ -27,6 +27,36 @@ export type Database = {
         }
         Relationships: []
       }
+      email_logs: {
+        Row: {
+          cc_addresses: string[] | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          subject: string | null
+          success: boolean | null
+          to_addresses: string[] | null
+        }
+        Insert: {
+          cc_addresses?: string[] | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          subject?: string | null
+          success?: boolean | null
+          to_addresses?: string[] | null
+        }
+        Update: {
+          cc_addresses?: string[] | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          subject?: string | null
+          success?: boolean | null
+          to_addresses?: string[] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
