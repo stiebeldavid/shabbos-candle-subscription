@@ -30,6 +30,9 @@ export const WaitlistModal = ({
         <DialogHeader>
           <DialogTitle>Join Our Waitlist</DialogTitle>
         </DialogHeader>
+        <p className="text-sm text-gray-600 mb-4">
+          We currently deliver exclusively in the Detroit Metro area, but iy"H we hope to expand our service to other communities soon. Join our waitlist to be notified when we arrive in your area!
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
