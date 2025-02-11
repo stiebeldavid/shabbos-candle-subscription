@@ -5,6 +5,7 @@ import { ProductSelection } from "@/components/ProductSelection";
 import { CandleCounter } from "@/components/CandleCounter";
 import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { WaitlistModal } from "@/components/WaitlistModal";
+import { SignupConfirmation } from "@/components/SignupConfirmation";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,7 @@ const Index = () => {
   );
   const [candleCount, setCandleCount] = useState(2);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   const handleSubscriptionSubmit = async (formData: any) => {
     try {
@@ -29,18 +31,21 @@ const Index = () => {
 
       if (error) {
         console.error('Error sending email:', error);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "Please try again or contact support.",
+        });
+        return;
       }
 
-      toast({
-        title: "Subscription completed successfully!",
-        description: "Thank you for subscribing to Shabbos Light.",
-      });
+      setIsConfirmationOpen(true);
     } catch (error) {
       console.error('Error processing subscription:', error);
-      // Still show success to user since their subscription was received
       toast({
-        title: "Subscription completed successfully!",
-        description: "Thank you for subscribing to Shabbos Light.",
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again or contact support.",
       });
     }
   };
@@ -92,6 +97,11 @@ const Index = () => {
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}
+      />
+      
+      <SignupConfirmation 
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
       />
     </div>
   );
