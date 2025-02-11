@@ -11,7 +11,8 @@ export const CandleCounter = ({
 }) => {
   return (
     <div className="glass-card rounded-lg shadow p-4 mb-8">
-      <h3 className="font-semibold mb-4">Number of Candles Weekly</h3>
+      <h3 className="font-semibold mb-2">How many candles do you light each Shabbos?</h3>
+      <p className="text-sm text-gray-600 mb-4">This will determine the number of candles we will deliver to you each month</p>
       <div className="flex items-center justify-between">
         <motion.button
           whileHover={{ scale: 1.1 }}
