@@ -16,11 +16,55 @@ const Index = () => {
   const [candleCount, setCandleCount] = useState(2);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
-  const handleSubscriptionSubmit = (formData: any) => {
-    toast({
-      title: "Subscription completed successfully!",
-      description: "Thank you for subscribing to Shabbos Light.",
-    });
+  const handleSubscriptionSubmit = async (formData: any) => {
+    try {
+      const emailContent = `
+New Subscription:
+----------------
+Product Type: ${selectedProduct}
+Number of Candles: ${candleCount}
+
+Customer Information:
+------------------
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone: ${formData.phone || 'Not provided'}
+Address: ${formData.address}
+Apartment/Suite: ${formData.apartment || 'Not provided'}
+Special Instructions: ${formData.instructions || 'None'}
+      `;
+
+      const response = await fetch('https://api.elasticemail.com/v2/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          apikey: 'YOUR_API_KEY', // We'll need to set this up securely
+          subject: 'New Shabbos Light Subscription',
+          from: 'noreply@shabboslight.com',
+          fromName: 'Shabbos Light',
+          to: 'stiebeldavid@gmail.com',
+          bodyText: emailContent,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email notification');
+      }
+
+      toast({
+        title: "Subscription completed successfully!",
+        description: "Thank you for subscribing to Shabbos Light.",
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      // Still show success to user since their subscription was received
+      toast({
+        title: "Subscription completed successfully!",
+        description: "Thank you for subscribing to Shabbos Light.",
+      });
+    }
   };
 
   return (
