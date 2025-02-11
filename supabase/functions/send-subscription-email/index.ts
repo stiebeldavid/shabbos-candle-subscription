@@ -50,19 +50,16 @@ Apartment/Suite: ${data.apartment || 'Not provided'}
 Special Instructions: ${data.instructions || 'None'}
     `;
 
-    const toAddress = "stiebeldavid@gmail.com";
-    const ccAddress = "Shalomphotography1@gmail.com";
+    const toAddresses = ["stiebeldavid@gmail.com", "Shalomphotography1@gmail.com"];
 
-    console.log("Attempting to send email with CC:", {
-      to: toAddress,
-      cc: ccAddress,
+    console.log("Attempting to send email:", {
+      to: toAddresses,
       subject: "New Or L'Door Subscription"
     });
 
     const emailResponse = await resend.emails.send({
       from: "Or L'Door <onboarding@resend.dev>",
-      to: [toAddress],
-      cc: [ccAddress],
+      to: toAddresses,
       subject: "New Or L'Door Subscription",
       text: emailContent,
     });
@@ -73,8 +70,8 @@ Special Instructions: ${data.instructions || 'None'}
     const { error: logError } = await supabase
       .from('email_logs')
       .insert([{
-        to_addresses: [toAddress],
-        cc_addresses: [ccAddress],
+        to_addresses: toAddresses,
+        cc_addresses: null,
         subject: "New Or L'Door Subscription",
         success: true,
         error_message: null
@@ -98,8 +95,8 @@ Special Instructions: ${data.instructions || 'None'}
     const { error: logError } = await supabase
       .from('email_logs')
       .insert([{
-        to_addresses: ["stiebeldavid@gmail.com"],
-        cc_addresses: ["Shalomphotography1@gmail.com"],
+        to_addresses: ["stiebeldavid@gmail.com", "Shalomphotography1@gmail.com"],
+        cc_addresses: null,
         subject: "New Or L'Door Subscription",
         success: false,
         error_message: error.message

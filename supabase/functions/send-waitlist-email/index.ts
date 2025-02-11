@@ -34,8 +34,7 @@ City: ${data.city}
 
     await resend.emails.send({
       from: "Or L'Door <onboarding@resend.dev>",
-      to: ["stiebeldavid@gmail.com"],
-      cc: ["Shalomphotography1@gmail.com"],
+      to: ["stiebeldavid@gmail.com", "Shalomphotography1@gmail.com"],
       subject: "New Or L'Door Waitlist Signup",
       text: adminEmailContent,
     });
