@@ -10,9 +10,6 @@ interface FormData {
   address: string;
   apartment: string;
   instructions: string;
-  cardNumber: string;
-  expiration: string;
-  cvv: string;
 }
 
 export const SubscriptionForm = ({
@@ -30,9 +27,6 @@ export const SubscriptionForm = ({
     address: "",
     apartment: "",
     instructions: "",
-    cardNumber: "",
-    expiration: "",
-    cvv: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -134,55 +128,9 @@ export const SubscriptionForm = ({
       </div>
 
       <div className="pt-4 border-t">
-        <h3 className="font-semibold mb-4">Payment Information</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Card Number
-            </label>
-            <input
-              type="text"
-              name="cardNumber"
-              required
-              pattern="\d*"
-              maxLength={16}
-              className="w-full px-4 py-2 rounded-lg bg-secondary border-none"
-              value={formData.cardNumber}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Expiration
-              </label>
-              <input
-                type="text"
-                name="expiration"
-                required
-                placeholder="MM/YY"
-                className="w-full px-4 py-2 rounded-lg bg-secondary border-none"
-                value={formData.expiration}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                CVV
-              </label>
-              <input
-                type="text"
-                name="cvv"
-                required
-                pattern="\d*"
-                maxLength={4}
-                className="w-full px-4 py-2 rounded-lg bg-secondary border-none"
-                value={formData.cvv}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
+        <p className="text-sm text-gray-600">
+          Once you subscribe, we will calculate the monthly price (likely ~$10-15/month) and follow-up for payment confirmation. You will not be charged anything yet.
+        </p>
       </div>
 
       <motion.button
