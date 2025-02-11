@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 export const WaitlistModal = ({
   isOpen,
@@ -14,14 +15,42 @@ export const WaitlistModal = ({
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Added to waitlist successfully!",
-      description: "We'll notify you when we expand to your area.",
-    });
-    onClose();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('send-waitlist-email', {
+        body: { email, city }
+      });
+
+      if (error) {
+        console.error('Error sending waitlist email:', error);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "Please try again or contact support.",
+        });
+        return;
+      }
+
+      toast({
+        title: "Added to waitlist successfully!",
+        description: "We'll notify you when we expand to your area.",
+      });
+      onClose();
+    } catch (error) {
+      console.error('Error processing waitlist:', error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again or contact support.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -62,9 +91,10 @@ export const WaitlistModal = ({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="px-4 py-2 bg-primary text-white rounded-button"
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-primary text-white rounded-button disabled:opacity-50"
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </motion.button>
           </div>
         </form>
