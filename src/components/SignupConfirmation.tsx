@@ -33,7 +33,7 @@ export const SignupConfirmation = ({ isOpen, onClose }: SignupConfirmationProps)
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-2xl text-center mb-2">
-            Welcome to Shabbos Light! 🕯️
+            Welcome to Or L'Door! 🕯️
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center space-y-4">
             <p className="text-lg font-medium text-primary">
