@@ -25,7 +25,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      <Navbar onOpenWaitlist={() => setIsWaitlistOpen(true)} />
       <main className="pt-16 pb-24 px-4 max-w-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
