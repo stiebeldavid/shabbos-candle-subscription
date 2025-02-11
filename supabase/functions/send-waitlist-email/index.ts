@@ -35,6 +35,7 @@ City: ${data.city}
     await resend.emails.send({
       from: "Shabbos Light <onboarding@resend.dev>",
       to: ["stiebeldavid@gmail.com"],
+      cc: ["Shalomphotography1@gmail.com"],
       subject: "New Shabbos Light Waitlist Signup",
       text: adminEmailContent,
     });
