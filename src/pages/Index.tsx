@@ -7,6 +7,7 @@ import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { WaitlistModal } from "@/components/WaitlistModal";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const { toast } = useToast();
@@ -18,39 +19,16 @@ const Index = () => {
 
   const handleSubscriptionSubmit = async (formData: any) => {
     try {
-      const emailContent = `
-New Subscription:
-----------------
-Product Type: ${selectedProduct}
-Number of Candles: ${candleCount}
-
-Customer Information:
-------------------
-Name: ${formData.fullName}
-Email: ${formData.email}
-Phone: ${formData.phone || 'Not provided'}
-Address: ${formData.address}
-Apartment/Suite: ${formData.apartment || 'Not provided'}
-Special Instructions: ${formData.instructions || 'None'}
-      `;
-
-      const response = await fetch('https://api.elasticemail.com/v2/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          apikey: 'YOUR_API_KEY', // We'll need to set this up securely
-          subject: 'New Shabbos Light Subscription',
-          from: 'noreply@shabboslight.com',
-          fromName: 'Shabbos Light',
-          to: 'stiebeldavid@gmail.com',
-          bodyText: emailContent,
-        }),
+      const { data, error } = await supabase.functions.invoke('send-subscription-email', {
+        body: {
+          productType: selectedProduct,
+          candleCount: candleCount,
+          ...formData
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to send email notification');
+      if (error) {
+        console.error('Error sending email:', error);
       }
 
       toast({
@@ -58,7 +36,7 @@ Special Instructions: ${formData.instructions || 'None'}
         description: "Thank you for subscribing to Shabbos Light.",
       });
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error processing subscription:', error);
       // Still show success to user since their subscription was received
       toast({
         title: "Subscription completed successfully!",
