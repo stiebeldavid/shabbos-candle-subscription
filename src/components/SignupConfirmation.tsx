@@ -43,7 +43,7 @@ export const SignupConfirmation = ({ isOpen, onClose }: SignupConfirmationProps)
               <p>Here's what happens next:</p>
               <ol className="list-decimal list-inside text-left space-y-2 pl-4">
                 <li>You'll receive a confirmation email shortly</li>
-                <li>Your first delivery will arrive before next Shabbos</li>
+                <li>We'll follow up to confirm pricing and collect payment details</li>
                 <li>We'll notify you before each monthly delivery</li>
               </ol>
             </div>
