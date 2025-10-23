@@ -1,43 +1,93 @@
 
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
+import { ProductSelection } from "@/components/ProductSelection";
+import { CandleCounter } from "@/components/CandleCounter";
+import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { WaitlistModal } from "@/components/WaitlistModal";
+import { SignupConfirmation } from "@/components/SignupConfirmation";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { ProductGrid } from "@/components/ProductGrid";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const { toast } = useToast();
+  const [selectedProduct, setSelectedProduct] = useState<"wax" | "oil" | null>(
+    null
+  );
+  const [candleCount, setCandleCount] = useState(2);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+
+  const handleSubscriptionSubmit = async (formData: any) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-subscription-email', {
+        body: {
+          productType: selectedProduct,
+          candleCount: candleCount,
+          ...formData
+        }
+      });
+
+      if (error) {
+        console.error('Error sending email:', error);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "Please try again or contact support.",
+        });
+        return;
+      }
+
+      setIsConfirmationOpen(true);
+    } catch (error) {
+      console.error('Error processing subscription:', error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again or contact support.",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar onOpenWaitlist={() => setIsWaitlistOpen(true)} />
-      <main className="pt-24 pb-24 px-4 max-w-6xl mx-auto">
+      <main className="pt-16 pb-24 px-4 max-w-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
+          className="mb-8"
         >
           <img
             src="https://static.readdy.ai/image/ef6f64f48ce707ea03ee161086b0f46c/c6f1ef489fa68fe90042979f233daa5f.jpeg"
             alt="Shabbos Candles"
-            className="w-full max-w-2xl mx-auto h-[300px] object-cover rounded-lg mb-6"
+            className="w-full h-[200px] object-cover rounded-lg mb-4"
           />
-          <h1 className="text-4xl font-bold mb-4">Welcome to Or L'Door</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Shop our collection of premium Shabbos candles and accessories. Quality products delivered to your door in the Detroit Metro area.
+          <h2 className="text-xl font-semibold mb-2">Welcome to Or L'Door</h2>
+          <p className="text-gray-600 text-sm">
+            Never miss the beautiful mitzvah of lighting Shabbos candles. Subscribe to our monthly Shabbos candle delivery service and have your candles delivered directly to your door in the Detroit Metro area.
           </p>
         </motion.div>
 
-        <ProductGrid />
+        <ProductSelection
+          selected={selectedProduct}
+          onSelect={setSelectedProduct}
+        />
+        <CandleCounter count={candleCount} onUpdate={setCandleCount} />
+        <SubscriptionForm
+          onSubmit={handleSubscriptionSubmit}
+          productSelected={!!selectedProduct}
+        />
 
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground mb-2">Not in Detroit Metro?</p>
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-600">Not in Detroit Metro? Join our waitlist!</p>
           <button
             onClick={() => setIsWaitlistOpen(true)}
-            className="text-primary text-sm font-medium hover:underline"
+            className="text-primary text-sm font-medium mt-2 hover:underline"
           >
-            Join our waitlist
+            Join Waitlist
           </button>
         </div>
       </main>
@@ -45,6 +95,11 @@ const Index = () => {
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}
+      />
+      
+      <SignupConfirmation 
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
       />
     </div>
   );
